@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  margin:0;
+  padding:0;
+}
+
+body {
+  padding: 25px;
+  background: url('http://theromantic.com/wp-content/uploads/2015/07/romantic-picnic-idea-turned-different.jpg') no-repeat center fixed;
+  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
+  background-size: cover; /* version standardisée */
+}

@@ -1,0 +1,44 @@
+<div class="container" *ngIf="(event$ | async) as event">
+  <section class="event">
+    <h1>{{ event?.title }}</h1>
+    <h2>{{ event?.date | date : "dd MMMM yyyy" }} à {{ event?.date  | date : "HH:mm" }}</h2>
+    <hr/>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Plat salé</th>
+          <th>Plat sucré</th>
+          <th>Boisson</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let participant of event.participants">
+          <th scope="row">1</th>
+          <td>{{ participant.name }}</td>
+          <td>
+            <span *ngIf="participant.meal =='salty' || participant.meal == 'both'">
+              <span *ngIf="!participant.surprise && participant.saltyplate;then content else other_content"></span>
+              <ng-template #content>{{ participant.saltyplate }}</ng-template>
+              <ng-template #other_content>Oui, mais c'est une surprise</ng-template>
+            </span>
+          </td>
+          <td>
+            <span *ngIf="participant.meal =='sweet' || participant.meal == 'both'">
+              <span *ngIf="!participant.surprise && participant.sweetplate;then content else other_content"></span>
+              <ng-template #content>{{ participant.sweetplate }}</ng-template>
+              <ng-template #other_content>Oui, mais c'est une surprise</ng-template>
+            </span>
+          </td>
+          <td>
+            <span *ngIf="participant.meal =='beverage'">
+              {{ participant.beverage }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary btn-lg" (click)="addParticipant()">Ajouter un participant</button>
+  </section>
+</div>

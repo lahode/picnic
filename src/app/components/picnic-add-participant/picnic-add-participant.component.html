@@ -1,0 +1,90 @@
+<div class="container" *ngIf="(event$ | async) as event">
+  <section class="event">
+    <h1>{{ event?.title }}</h1>
+    <h2>{{ event?.date | date : "dd MMMM yyyy" }} à {{ event?.date  | date : "HH:mm" }}</h2>
+    <hr/>
+    <div style="height: 350px;">
+    <app-wizard (onStepChanged)="onStepChanged($event)">
+      <app-wizard-step [title]="'Etape 1'" [isValid]="nameForm.form.valid && participant.present !== ''" [endStep]="participant.present == -1" (complete)="goto()">
+        <h1>Etape n°1</h1>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="mealtype" id="mealtype1" value="1" [(ngModel)]="participant.present">
+            Je serai présent le {{ event?.date | date : "dd MMMM yyyy" }} pour {{ event?.title }}
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="mealtype" id="mealtype2" value="-1" [(ngModel)]="participant.present">
+            Je ne serai pas présent.
+          </label>
+        </div>
+        <form #nameForm="ngForm">
+          <div *ngIf="participant.present == 1">
+              <div class="form-group">
+                <label for="name">Insérez votre nom</label>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="name" [(ngModel)]="participant.name" required>
+              </div>
+          </div>
+        </form>
+      </app-wizard-step>
+      <app-wizard-step [title]="'Etape 2'" [isValid]="participant.meal">
+        <h1>Etape n°2</h1>
+        <p class="lead">J'apporterai avec moi un plat:</p>
+        <form>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="mealtype" id="mealtype1" value="sweet" [(ngModel)]="participant.meal">
+              Sucré
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="mealtype" id="mealtype2" value="salty" [(ngModel)]="participant.meal">
+              Salé
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="mealtype" id="mealtype3" value="both" [(ngModel)]="participant.meal">
+              Les 2
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="mealtype" id="mealtype4" value="beverage" [(ngModel)]="participant.meal">
+              Plutôt des boissons
+            </label>
+          </div>
+        </form>
+      </app-wizard-step>
+      <app-wizard-step [title]="'Etape n°3'" (complete)="save(event)" [isValid]="participant.surprise || validPlates">
+        <h1>Etape n°3</h1>
+        <p class="lead">Et ce sera...</p>
+        <div *ngIf="!participant.surprise">
+          <div class="form-group" *ngIf="participant.meal == 'sweet' || participant.meal == 'both'">
+            <label for="sweetplate">Comme plat sucré:</label>
+            <input type="text" class="form-control" id="sweetplate" name="sweetplate" aria-describedby="sweetplate" [(ngModel)]="participant.sweetplate" required>
+          </div>
+          <div class="form-group" *ngIf="participant.meal == 'salty' || participant.meal == 'both'">
+            <label for="saltyplate">Comme plat salé:</label>
+            <input type="text" class="form-control" id="saltyplate" name="saltyplate" aria-describedby="saltyplate" [(ngModel)]="participant.saltyplate" required>
+          </div>
+        </div>
+        <div *ngIf="participant.meal === 'beverage'">
+          <div class="form-group">
+            <label for="beverage">Quoi comme boisson?</label>
+            <input type="text" class="form-control" id="beverage" name="beverage" aria-describedby="beverage" [(ngModel)]="participant.beverage" required>
+          </div>
+        </div>
+        <div class="form-check" *ngIf="participant.meal !== 'beverage'">
+          <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" name="showNext" [(ngModel)]="participant.surprise"/>
+            Une surprise
+          </label>
+        </div>
+      </app-wizard-step>
+    </app-wizard>
+    </div>
+  </section>
+</div>
